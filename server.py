@@ -1,83 +1,35 @@
-from sys import argv, stderr 
-from socket import getaddrinfo, socket 
-from socket import AF_INET, SOCK_STREAM, AI_ADDRCONFIG, AI_PASSIVE 
-from socket import IPPROTO_TCP, SOL_SOCKET, SO_REUSEADDR 
-from os import abort
-
-def getEnderecoHost(porta): 
-    try: 
-        enderecoHost = getaddrinfo( 
-            'localhost',
-            porta,              
-            family=AF_INET,              
-            type=SOCK_STREAM,              
-            proto=IPPROTO_TCP,
-            flags=AI_ADDRCONFIG | AI_PASSIVE) 
-    except:         
-        print("Não obtive informações sobre o servidor (???)", file=stderr) 
-        abort()     
-    return enderecoHost
-
-def criaSocket(enderecoServidor): 
-    fd = socket(enderecoServidor[0][0], enderecoServidor[0][1]) 
-    if not fd: 
-        print("Não consegui criar o socket", file=stderr) 
-        abort()
-    return fd
-    
-def setModo(fd): 
-    fd.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) 
-    return
-
-def bindaSocket(fd, porta): 
-    try: 
-        fd.bind(('localhost', porta)) 
-    except: 
-        print("Erro ao dar bind no socket do servidor", porta, file=stderr) 
-        abort()     
-    return
-
-def escuta(fd): 
-    try: 
-        fd.listen(0) 
-    except: 
-        print("Erro ao começar a escutar a porta", file=stderr) 
-        abort()     
-    print("Iniciando o serviço"); 
-    return
-
-def conecta(fd): 
-    (con, cliente) = fd.accept() 
-    print("Servidor conectado com", cliente) 
-    return con
-
-def fazTudo(fd): 
-    while True: 
-        buffer = fd.recv(1024).decode("utf-8") 
-        if not buffer: 
-            break         
-        print('==>', buffer) 
-        fd.send(bytearray(buffer, 'utf-8')) 
-    print("Conexão terminada com", fd) 
-    fd.close() 
-    return
+from sys import argv, exit 
+from socket import socket, AF_INET, SOCK_STREAM 
+import os
 
 def main(): 
-    if len(argv) == 2: 
-        porta = int(argv[1]) 
+    bufferSize = 1024 
+    host = 'localhost' 
+    if len(argv) > 1:
+        port = int(argv[1])
     else: 
-        porta = 8080     
-        enderecoHost = getEnderecoHost(porta)     
-        fd = criaSocket(enderecoHost)     
-    setModo(fd) 
-    bindaSocket(fd, porta) 
-    print("Servidor pronto em", enderecoHost) 
-    escuta(fd)     
-    while True:         
-        con = conecta(fd) 
-        if con == -1: 
-            continue 
-        fazTudo(con) 
+        port = 8080     
+    tcpSocket = socket(AF_INET, SOCK_STREAM)     
+    origem = (host, port)     
+    tcpSocket.bind(origem)     
+    tcpSocket.listen(1)    
+    print("Servidor pronto", host, port) 
+    while(True):         
+        con, cliente = tcpSocket.accept() 
+        pid = os.fork()
+        if pid == 0:             
+            tcpSocket.close() 
+            print("Servidor connectado com ", cliente) 
+            while True:                 
+                msg = con.recv(bufferSize) 
+                if not msg: 
+                    break 
+                print(cliente, msg)
+            con.close() 
+            exit()         
+        else: 
+            con.close() 
     return
-
-main()
+    
+if __name__ == "__main__": 
+    main()
