@@ -4,6 +4,7 @@ from socket import AF_INET, SOCK_STREAM, AI_ADDRCONFIG, AI_PASSIVE
 from socket import IPPROTO_TCP, SOL_SOCKET, SO_REUSEADDR 
 from os import abort, environ, fork
 from time import sleep
+from os import path
 import settings as settings
 
 # Metodo apresentado em aula
@@ -135,10 +136,13 @@ def request_handler(con):
                 not_found(con)                  # Caso ocorra algum erro, direcionamos o usuario para a pagina 404.
 
 def checkSettingsFile():    # Verifica se os dados foram inseridos no arquivo de configuracao, caso contrario Aborta a aplicacao
-    if settings.PORT == "":
+    if settings.PORT == "" or type(settings.PORT) != int:
         print("Por favor, insira uma Porta valida")
         abort()
     if settings.DEFAULT_DIR == "":
+        print("Por favor, insira um diretorio valido")
+        abort()
+    elif not path.exists(settings.DEFAULT_DIR):
         print("Por favor, insira um diretorio valido")
         abort()
     if settings.ERROR_URL == "":
