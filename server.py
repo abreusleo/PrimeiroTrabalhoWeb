@@ -61,7 +61,7 @@ def connect(fd):
     return con
 
 def not_found(con):
-    try:
+    try:    # Verifica a existencia do arquivo informado dentro de settings.ERROR_URL
         file = open("{}".format(settings.ERROR_URL), "rb") # Abre o arquivo File/404.html para enviar em caso de erro
     except:
         print("Arquivo de erro nao encontrado")

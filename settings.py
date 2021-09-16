@@ -4,7 +4,8 @@
 PORT = 8080
 
 # Escolha um diretorio padrao para os arquivos, esse diretorio deve ser criado manualmente antes
-# de ser escolhido para a aplicacao (Deve ser uma string)
+# de ser escolhido para a aplicacao. Note que a string deve terminar com '/',
+# caso contrario o programa ira acusar um erro e abortar a execucao. (Deve ser uma string)
 DEFAULT_DIR = "Files/"
 
 # Escolha uma URL padrao para o erro, mas certifique-se de alterar o nome do arquivo referente

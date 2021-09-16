@@ -9,7 +9,8 @@
 ## Requisitos:
   - Python 3.X.X instalado
 
-É possível rodar o servidor por linha de comando, para isso é necessário estar na pasta do arquivo server.py e utilizar o comando "python3 server.py".
+Por conta da utilizacao do comando pid() para aceitar varias conexoes, recomendamos o uso do Sistema Operacional Linux, ja que foi o sistema utilizado para o desenvolvimento e teste do servidor.
+É possível rodar o servidor por linha de comando, para isso é necessário estar na pasta do arquivo server.py e utilizar o comando "python3 server.py" ou "python server.py".
 
 ## implementações
 
