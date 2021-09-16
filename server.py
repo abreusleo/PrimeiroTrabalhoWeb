@@ -61,12 +61,17 @@ def connect(fd):
     return con
 
 def not_found(con):
-    file = open("{}".format(settings.ERROR_URL), "rb") # Abre o arquivo File/404.html para enviar em caso de erro
+    try:
+        file = open("{}".format(settings.ERROR_URL), "rb") # Abre o arquivo File/404.html para enviar em caso de erro
+    except:
+        print("Arquivo de erro nao encontrado")
+        abort() 
     con.send(b"HTTP/1.1 404 NOT FOUND\n")   # Entrega o codigo HTML 404, que significa que a socilitacao nao foi encontrada
     con.send(f"Content-Type: text/html\n\n".encode())   # Formata o Content-Type correspondente a pagina 404.
     fileContent = file.read()   # Le o conteudo da pagina 404.  
     con.send(fileContent)       # Envia o arquivo lido anteriormente
     file.close()                # Fecha o arquivo, ja que nao precisaremos mais usa-lo
+    return
 
 def file_type_hanlder(type):
     if type == "html" or type == "js":    # Caso o arquivo seja HTML ou JS, enviamos o Content-type Text
@@ -83,9 +88,10 @@ def send_file(con, fileInfo, fileType, fileExtension):
         fileContent = file.read()   # Le o conteudo do arquivo solicitado
         con.send(fileContent)       # Envia o arquivo solicitado
         file.close()                # Fecha o arquivo, ja que nao precisaremos mais usa-lo
-
     except:
         not_found(con)
+
+    return
     
 def checkExtension(extension):
     acceptedExtensions = ["html", "js", "jpeg", "png", "gif"]       # Lista de extensoes aceitas pelo site
@@ -134,23 +140,25 @@ def request_handler(con):
                 send_file(con, fileInfo, fileType, fileExtension)
             else:
                 not_found(con)                  # Caso ocorra algum erro, direcionamos o usuario para a pagina 404.
+    return
 
 def checkSettingsFile():    # Verifica se os dados foram inseridos no arquivo de configuracao, caso contrario Aborta a aplicacao
     if settings.PORT == "" or type(settings.PORT) != int:
         print("Por favor, insira uma Porta valida")
         abort()
-    if settings.DEFAULT_DIR == "":
+    if settings.DEFAULT_DIR == "" or not settings.DEFAULT_DIR.endswith("/"):
         print("Por favor, insira um diretorio valido")
         abort()
     elif not path.exists(settings.DEFAULT_DIR):
         print("Por favor, insira um diretorio valido")
         abort()
-    if settings.ERROR_URL == "":
+    if settings.ERROR_URL == "" or not settings.ERROR_URL.endswith(".html"):
         print("Por favor, insira uma URL de erro valida")
         abort()
     if not settings.FILE_LIST:
         print("Por favor, insira arquivos na lista padrao")
         abort()
+    return
 
 def main():
     checkSettingsFile()
