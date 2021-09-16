@@ -1,16 +1,19 @@
-# PrimeiroTrabalhoWeb
+# Servidor Web
 
 ## Alunos:
   - Carlos Ribeiro da Rocha - 1720372
   - Leonardo Santos Abreu - 1720565
 
-## Para instalar o servidor
+# Para instalar o servidor
+  - Certifique-se de entrar na branch "main"
+  - Execute o comando pull para obter a versão funcional do servidor
 
 ## Requisitos:
   - Python 3.X.X instalado
+  - Sistema Operacional Linux (Por conta da utilizacao do comando pid() para aceitar varias conexoes, recomendamos o uso do Sistema Operacional Linux. Além disso, foi o sistema utilizado para os testes e desenvolvimento do servidor)
 
-Por conta da utilizacao do comando pid() para aceitar varias conexoes, recomendamos o uso do Sistema Operacional Linux, ja que foi o sistema utilizado para o desenvolvimento e teste do servidor.
-É possível rodar o servidor por linha de comando, para isso é necessário estar na pasta do arquivo server.py e utilizar o comando "python3 server.py" ou "python server.py".
+## Execução
+É possível rodar o servidor por linha de comando, para isso é necessário estar no diretório do arquivo server.py e utilizar o comando "python3 server.py" ou "python server.py".
 
 ## implementações
 
